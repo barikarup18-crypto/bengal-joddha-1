@@ -37,11 +37,16 @@ jobs:
 
       - name: Install dependencies and build web
         run: |
+          SUBDIR=$(find . -maxdepth 3 -name "package.json" -not -path "*/node_modules/*" | head -n 1 | xargs dirname)
+          echo "Using project directory: $SUBDIR"
+          cd "$SUBDIR"
           npm install
           npm run build
 
       - name: Configure and build Android APK
         run: |
+          SUBDIR=$(find . -maxdepth 3 -name "package.json" -not -path "*/node_modules/*" | head -n 1 | xargs dirname)
+          cd "$SUBDIR"
           # প্রয়োজন অনুযায়ী appId ও অ্যাপের নাম আলাদা রাখুন যেন পুরোনো অ্যাপের সাথে কনফ্লিক্ট না হয়
           npx cap init "Bengal Joddha 1" "com.bengaljoddha.one" --web-dir=dist || true
           npx cap add android || true
